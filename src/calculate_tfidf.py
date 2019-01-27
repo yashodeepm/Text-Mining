@@ -43,6 +43,6 @@ for word_list in word_list_by_document:
     tfidf.append(tfidf_doc)
     count+=1
 fhandler = open("tfidf.txt",'w+')
-fhandler.write(tfidf)
-fhandler.write(file_list)
-fhandler.write(universal_word_list)
+fhandler.write(str(tfidf))
+fhandler.write(str(file_list))
+fhandler.write(str(universal_word_list))
