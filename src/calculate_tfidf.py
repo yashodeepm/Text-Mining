@@ -21,25 +21,24 @@ for file in file_list:
         if word not in universal_word_list:
             universal_word_list.append(word)
     word_list_by_document.append(clean_word_list_count)
-            
+doc_freq = {}
+for word in universal_word_list:
+    freq = 0
+    for i in word_list_by_document:
+        if word in i:
+            freq+=1
+    doc_freq[word] = freq
 print("-----------Starting tf-idf matrix generator------------")
-print(len(word_list_by_document))
 tfidf = []
 count = 0
 doc_no = len(word_list_by_document)
 for word_list in word_list_by_document:
     print("Document No "+str(count)+":")
     tfidf_doc = []
-    counter = 0
     for word in universal_word_list:
         tf_value = word_list.get(word,0)/len(word_list)
-        doc_freq = 0
-        for i in word_list_by_document:
-            if word in i:
-                doc_freq+=1
-        idf_value = math.log(doc_no/doc_freq)
+        idf_value = math.log(doc_no/doc_freq[word])
         tfidf_doc.append(tf_value*idf_value)
-        counter+=1
     tfidf.append(tfidf_doc)
     count+=1
 fhandler = open("tfidf.txt",'w+')
