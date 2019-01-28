@@ -1,5 +1,6 @@
 import os
 import math
+import numpy as np
 os.chdir("../bbcsport")
 file_list = os.listdir()
 for i in file_list:
@@ -41,7 +42,21 @@ for word_list in word_list_by_document:
         tfidf_doc.append(tf_value*idf_value)
     tfidf.append(tfidf_doc)
     count+=1
-fhandler = open("tfidf.txt",'w+')
-fhandler.write(str(tfidf))
-fhandler.write(str(file_list))
-fhandler.write(str(universal_word_list))
+# fhandler = open("tfidf.txt",'w+')
+# fhandler.write(str(tfidf))
+# fhandler.write(str(file_list))
+# fhandler.write(str(universal_word_list))
+tfidf = np.array(tfidf)
+print(type(tfidf))
+tfidf_mean = np.mean(tfidf, axis = 0)
+# print(tfidf_mean.shape)
+# print(tfidf.shape)
+tfidf_mean = tfidf_mean.reshape(tfidf_mean.shape[0],1)
+tfidf = np.subtract(tfidf.T, tfidf_mean).T
+# np.subtract(tfidf.max(axis=0), tfidf.min(axis=0))
+tfidf_range = np.subtract(tfidf.max(axis=0), tfidf.min(axis=0))
+# print(tfidf_range.shape)
+tfidf_range = tfidf_range.reshape(tfidf_range.shape[0],1)
+tfidf = np.divide(tfidf.T, tfidf_range).T
+tfidf_covariance = 1/tfidf.shape[0] * np.dot(tfidf.T, tfidf)
+a,b,c = np.linalg.svd(tfidf_covariance)
